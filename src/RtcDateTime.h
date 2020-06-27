@@ -47,6 +47,31 @@ public:
 
     bool IsValid() const;
 
+    void setYear(uint16_t year)
+    {
+        _yearFrom2000 = (year >= c_OriginYear) ? year - c_OriginYear : year;
+    }
+    void setMonth(uint8_t month)
+    {
+        _month = month;
+    }
+    void setDay(uint8_t dayOfMonth)
+    {
+        _dayOfMonth = dayOfMonth;
+    }
+    void setHour(uint8_t hour)
+    {
+        _hour = hour;
+    }
+    void setMinute(uint8_t minute)
+    {
+        _minute = minute;
+    }
+    void setSecond(uint8_t second)
+    {
+        _second = second;
+    }
+
     uint16_t Year() const
     {
         return c_OriginYear + _yearFrom2000;
@@ -75,14 +100,14 @@ public:
     uint8_t DayOfWeek() const;
 
     // 32-bit time; as seconds since 1/1/2000
-	uint32_t TotalSeconds() const;
+    uint32_t TotalSeconds() const;
 
-	// 64-bit time; as seconds since 1/1/2000
-	uint64_t TotalSeconds64() const;
+    // 64-bit time; as seconds since 1/1/2000
+    uint64_t TotalSeconds64() const;
 
-	// total days since 1/1/2000
-	uint16_t TotalDays() const;
-	
+    // total days since 1/1/2000
+    uint16_t TotalDays() const;
+    
     // add seconds
     void operator += (uint32_t seconds)
     {
