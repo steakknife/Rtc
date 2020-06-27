@@ -1,11 +1,11 @@
-#pragma once
+#ifndef __RTCDS3231_H__
+#define __RTCDS3231_H__
 
 #include <Arduino.h>
 
 #include "RtcDateTime.h"
 #include "RtcTemperature.h"
 #include "RtcUtility.h"
-
 
 //I2C Slave Address  
 const uint8_t DS3231_ADDRESS = 0x68;
@@ -570,3 +570,5 @@ private:
     }
 
 };
+
+#endif // __RTCDS3231_H__

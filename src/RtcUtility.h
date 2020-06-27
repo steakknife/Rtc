@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __RTCUTILITY_H__
+#define __RTCUTILITY_H__
 
 // ESP32 complains if not included
 #if defined(ARDUINO_ARCH_ESP32)
@@ -29,3 +30,5 @@
 extern uint8_t BcdToUint8(uint8_t val);
 extern uint8_t Uint8ToBcd(uint8_t val);
 extern uint8_t BcdToBin24Hour(uint8_t bcdHour);
+
+#endif // __RTCUTILITY_H__

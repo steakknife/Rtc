@@ -1,10 +1,10 @@
-#pragma once
+#ifndef __RTCDS1302_H__
+#define __RTCDS1302_H__
 
 #include <Arduino.h>
+
 #include "RtcDateTime.h"
 #include "RtcUtility.h"
-
-
 
 //DS1302 Register Addresses
 const uint8_t DS1302_REG_TIMEDATE       = 0x80;
@@ -241,3 +241,5 @@ private:
         _wire.endTransmission();
     }
 };
+
+#endif // __RTCDS1302_H__

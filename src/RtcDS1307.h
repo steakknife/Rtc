@@ -1,6 +1,8 @@
-#pragma once
+#ifndef __RTCDS1307_H__
+#define __RTCDS1307_H__
 
 #include <Arduino.h>
+
 #include "RtcDateTime.h"
 #include "RtcUtility.h"
 
@@ -227,3 +229,5 @@ private:
         // handle _lastError?
     }
 };
+
+#endif // __RTCDS1307_H__

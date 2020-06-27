@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __RTCDATETIME_H__
+#define __RTCDATETIME_H__
 
 // ESP32 complains if not included
 #if defined(ARDUINO_ARCH_ESP32)
@@ -194,3 +195,5 @@ protected:
     }
 
 };
+
+#endif // __RTCDATETIME_H__
