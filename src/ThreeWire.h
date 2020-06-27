@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __THREEWIRE_H__
+#define __THREEWIRE_H__
 
 //ThreeWire command Read/Write flag 
 const uint8_t THREEWIRE_READFLAG = 0x01;
@@ -94,3 +95,5 @@ private:
         pinMode(_cePin, INPUT);
     }
 };
+
+#endif // __THREEWIRE_H__

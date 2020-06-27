@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __RTCTEMPERATURE_H__
+#define __RTCTEMPERATURE_H__
 
 class RtcTemperature
 {
@@ -130,3 +131,5 @@ public:
 protected:
     int16_t  _centiDegC;  // 1/100th of a degree temperature (100 x degC)
 };
+
+#endif // __RTCTEMPERATURE_H__

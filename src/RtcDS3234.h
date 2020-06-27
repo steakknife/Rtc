@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __RTCDS3234_H__
+#define __RTCDS3234_H__
 
 #include <Arduino.h>
 #include <SPI.h>
@@ -649,3 +650,5 @@ private:
     }
 
 };
+
+#endif // __RTCDS3234_H__

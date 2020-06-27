@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __EEPROMAT24C32_H__
+#define __EEPROMAT24C32_H__
 
 //I2C Slave Address  
 const uint8_t AT24C32_ADDRESS = 0x50; // 0b0 1010 A2 A1 A0
@@ -98,3 +99,5 @@ private:
         _wire.write(memoryAddress & 0xff);
     }
 };
+
+#endif // __EEPROMAT24C32_H__
