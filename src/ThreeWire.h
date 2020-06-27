@@ -42,8 +42,8 @@ public:
     }
 
     void write(uint8_t value, bool isDataRequestCommand = false) {
-        for (uint8_t bit = 0; bit < 8; bit++) {
-            digitalWrite(_ioPin, value & 0x01);
+        for (uint8_t bit = 0; bit < 8; ++bit, value >>= 1) {
+            digitalWrite(_ioPin, value & 1);
             delayMicroseconds(1);     // tDC = 200ns
 
             // clock up, data is read by DS1302
@@ -52,24 +52,21 @@ public:
 
             // for the last bit before a read
             // Set IO line for input before the clock down
-            if (bit == 7 && isDataRequestCommand) {
+            if (bit == 7 && isDataRequestCommand)
                 pinMode(_ioPin, INPUT);
-            }
 
             digitalWrite(_clkPin, LOW);
             delayMicroseconds(1);     // tCL=1000ns, tCDD=800ns
-
-            value >>= 1;
         }
     }
 
     uint8_t read() {
         uint8_t value = 0;
 
-        for (uint8_t bit = 0; bit < 8; bit++) {
+        for (uint8_t bit = 0; bit < 8; ++bit) {
             // first bit is present on io pin, so only clock the other
             // bits
-            value |= (digitalRead(_ioPin) << bit);
+            value |= digitalRead(_ioPin) << bit;
         
             // Clock up, prepare for next
             digitalWrite(_clkPin, HIGH);

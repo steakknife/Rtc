@@ -3,7 +3,7 @@
 //I2C Slave Address  
 const uint8_t AT24C32_ADDRESS = 0x50; // 0b0 1010 A2 A1 A0
 
-template<class T_WIRE_METHOD> class EepromAt24c32
+template<typename T_WIRE_METHOD> class EepromAt24c32
 {
 public:
     EepromAt24c32(T_WIRE_METHOD& wire, uint8_t addressBits = 0b111) :
@@ -52,13 +52,10 @@ public:
 
         beginTransmission(memoryAddress);
 
-        while (countBytes > 0)
-        {
+        while (countBytes--) {
             _wire.write(*pValue++);
             delay(10); // per spec, memory writes
-
-            countBytes--;
-            countWritten++;
+            ++countWritten;
         }
 
         _lastError = _wire.endTransmission();
@@ -76,23 +73,14 @@ public:
     {
         // set address to read from
         beginTransmission(memoryAddress);
-        _lastError = _wire.endTransmission();
 
-        if (_lastError != 0)
-        {
-            return 0;
-        }
+        _lastError = _wire.endTransmission();
+        if (_lastError) return 0;
 
         // read the data
-        uint8_t countRead = 0;
+        uint8_t countRead = countBytes = _wire.requestFrom(_address, countBytes);
 
-        countRead = _wire.requestFrom(_address, countBytes);
-        countBytes = countRead;
-
-        while (countBytes-- > 0)
-        {
-            *pValue++ = _wire.read();
-        }
+        while (countBytes--) *pValue++ = _wire.read();
 
         return countRead;
     }
@@ -107,6 +95,6 @@ private:
     {
         _wire.beginTransmission(_address);
         _wire.write(memoryAddress >> 8);
-        _wire.write(memoryAddress & 0xFf);
+        _wire.write(memoryAddress & 0xff);
     }
 };

@@ -1,7 +1,4 @@
-
-
-#ifndef __RTCDS3231_H__
-#define __RTCDS3231_H__
+#pragma once
 
 #include <Arduino.h>
 
@@ -16,10 +13,10 @@ const uint8_t DS3231_ADDRESS = 0x68;
 //DS3231 Register Addresses
 const uint8_t DS3231_REG_TIMEDATE  = 0x00;
 const uint8_t DS3231_REG_ALARMONE  = 0x07;
-const uint8_t DS3231_REG_ALARMTWO  = 0x0B;
+const uint8_t DS3231_REG_ALARMTWO  = 0x0b;
                                          
-const uint8_t DS3231_REG_CONTROL   = 0x0E;
-const uint8_t DS3231_REG_STATUS    = 0x0F;
+const uint8_t DS3231_REG_CONTROL   = 0x0e;
+const uint8_t DS3231_REG_STATUS    = 0x0f;
 const uint8_t DS3231_REG_AGING     = 0x10;
                                          
 const uint8_t DS3231_REG_TEMP      = 0x11;
@@ -53,15 +50,14 @@ const uint8_t DS3231_AIFMASK = (_BV(DS3231_A1F) | _BV(DS3231_A2F));
 
 
 // seconds accuracy
-enum DS3231AlarmOneControl
-{
+enum DS3231AlarmOneControl {
     // bit order:  A1M4  DY/DT  A1M3  A1M2  A1M1
     DS3231AlarmOneControl_HoursMinutesSecondsDayOfMonthMatch = 0x00,
-    DS3231AlarmOneControl_OncePerSecond = 0x17,
-    DS3231AlarmOneControl_SecondsMatch = 0x16,
-    DS3231AlarmOneControl_MinutesSecondsMatch = 0x14,
-    DS3231AlarmOneControl_HoursMinutesSecondsMatch = 0x10,
-    DS3231AlarmOneControl_HoursMinutesSecondsDayOfWeekMatch = 0x08,
+    DS3231AlarmOneControl_OncePerSecond                      = 0x17,
+    DS3231AlarmOneControl_SecondsMatch                       = 0x16,
+    DS3231AlarmOneControl_MinutesSecondsMatch                = 0x14,
+    DS3231AlarmOneControl_HoursMinutesSecondsMatch           = 0x10,
+    DS3231AlarmOneControl_HoursMinutesSecondsDayOfWeekMatch  = 0x08,
 };
 
 class DS3231AlarmOne
@@ -105,16 +101,16 @@ public:
         return _flags;
     }
 
-    bool operator == (const DS3231AlarmOne& other) const
+    bool operator==(const DS3231AlarmOne& other) const
     {
-        return (_dayOf == other._dayOf &&
-                _hour == other._hour &&
+        return _dayOf   == other._dayOf  &&
+                _hour   == other._hour   &&
                 _minute == other._minute &&
                 _second == other._second &&
-                _flags == other._flags);
+                _flags  == other._flags;
     }
 
-    bool operator != (const DS3231AlarmOne& other) const
+    bool operator!=(const DS3231AlarmOne& other) const
     {
         return !(*this == other);
     }
@@ -129,14 +125,13 @@ protected:
 };
 
 // minutes accuracy
-enum DS3231AlarmTwoControl
-{
+enum DS3231AlarmTwoControl {
     // bit order:  A2M4  DY/DT  A2M3  A2M2
     DS3231AlarmTwoControl_HoursMinutesDayOfMonthMatch = 0x00,
-    DS3231AlarmTwoControl_OncePerMinute = 0x0b,
-    DS3231AlarmTwoControl_MinutesMatch = 0x0a,
-    DS3231AlarmTwoControl_HoursMinutesMatch = 0x08,
-    DS3231AlarmTwoControl_HoursMinutesDayOfWeekMatch = 0x04,
+    DS3231AlarmTwoControl_OncePerMinute               = 0x0b,
+    DS3231AlarmTwoControl_MinutesMatch                = 0x0a,
+    DS3231AlarmTwoControl_HoursMinutesMatch           = 0x08,
+    DS3231AlarmTwoControl_HoursMinutesDayOfWeekMatch  = 0x04,
 };
 
 class DS3231AlarmTwo
@@ -173,15 +168,15 @@ public:
         return _flags;
     }
 
-    bool operator == (const DS3231AlarmTwo& other) const
+    bool operator==(const DS3231AlarmTwo& other) const
     {
-        return (_dayOf == other._dayOf &&
-                _hour == other._hour &&
+        return _dayOf   == other._dayOf  &&
+                _hour   == other._hour   &&
                 _minute == other._minute &&
-                _flags == other._flags);
+                _flags  == other._flags;
     }
 
-    bool operator != (const DS3231AlarmTwo& other) const
+    bool operator!=(const DS3231AlarmTwo& other) const
     {
         return !(*this == other);
     }
@@ -195,16 +190,14 @@ protected:
 };
 
 
-enum DS3231SquareWaveClock
-{
+enum DS3231SquareWaveClock {
     DS3231SquareWaveClock_1Hz  = 0b00000000,
     DS3231SquareWaveClock_1kHz = 0b00001000,
     DS3231SquareWaveClock_4kHz = 0b00010000,
     DS3231SquareWaveClock_8kHz = 0b00011000,
 };
 
-enum DS3231SquareWavePinMode
-{
+enum DS3231SquareWavePinMode {
     DS3231SquareWavePin_ModeNone,
     DS3231SquareWavePin_ModeAlarmOne,
     DS3231SquareWavePin_ModeAlarmTwo,
@@ -213,14 +206,13 @@ enum DS3231SquareWavePinMode
     DS3231SquareWavePin_ModeClock
 };
 
-enum DS3231AlarmFlag
-{
-    DS3231AlarmFlag_Alarm1 = 0x01,
-    DS3231AlarmFlag_Alarm2 = 0x02,
+enum DS3231AlarmFlag {
+    DS3231AlarmFlag_Alarm1    = 0x01,
+    DS3231AlarmFlag_Alarm2    = 0x02,
     DS3231AlarmFlag_AlarmBoth = 0x03,
 };
 
-template<class T_WIRE_METHOD> class RtcDS3231
+template<typename T_WIRE_METHOD> class RtcDS3231
 {
 public:
     RtcDS3231(T_WIRE_METHOD& wire) :
@@ -247,26 +239,20 @@ public:
     bool IsDateTimeValid()
     {
         uint8_t status = getReg(DS3231_REG_STATUS);
-        return (!(status & _BV(DS3231_OSF)) && (_lastError == 0));
+        return !(status & _BV(DS3231_OSF)) && !_lastError;
     }
 
     bool GetIsRunning()
     {
         uint8_t creg = getReg(DS3231_REG_CONTROL);
-        return (!(creg & _BV(DS3231_EOSC)) && (_lastError == 0));
+        return !(creg & _BV(DS3231_EOSC)) && !_lastError;
     }
 
     void SetIsRunning(bool isRunning)
     {
         uint8_t creg = getReg(DS3231_REG_CONTROL);
-        if (isRunning)
-        {
-            creg &= ~_BV(DS3231_EOSC);
-        }
-        else
-        {
-            creg |= _BV(DS3231_EOSC);
-        }
+        if (isRunning) creg &= ~_BV(DS3231_EOSC);
+        else           creg |= _BV(DS3231_EOSC);
         setReg(DS3231_REG_CONTROL, creg);
     }
 
@@ -288,8 +274,7 @@ public:
         uint8_t year = dt.Year() - 2000;
         uint8_t centuryFlag = 0;
 
-        if (year >= 100)
-        {
+        if (year >= 100) {
             year -= 100;
             centuryFlag = _BV(7);
         }
@@ -311,20 +296,17 @@ public:
     {
         _wire.beginTransmission(DS3231_ADDRESS);
         _wire.write(DS3231_REG_TIMEDATE);
+
         _lastError = _wire.endTransmission();
-        if (_lastError != 0)
-        {
-            return RtcDateTime(0);
-        }
+        if (_lastError) return RtcDateTime(0);
 
         uint8_t bytesRead = _wire.requestFrom(DS3231_ADDRESS, DS3231_REG_TIMEDATE_SIZE);
-        if (DS3231_REG_TIMEDATE_SIZE != bytesRead)
-        {
+        if (bytesRead != DS3231_REG_TIMEDATE_SIZE) {
             _lastError = 4;
             return RtcDateTime(0);
         }
 
-        uint8_t second = BcdToUint8(_wire.read() & 0x7F);
+        uint8_t second = BcdToUint8(_wire.read() & 0x7f);
         uint8_t minute = BcdToUint8(_wire.read());
         uint8_t hour = BcdToBin24Hour(_wire.read());
 
@@ -335,9 +317,7 @@ public:
         uint16_t year = BcdToUint8(_wire.read()) + 2000;
 
         if (monthRaw & _BV(7)) // century wrap flag
-        {
             year += 100;
-        }
         uint8_t month = BcdToUint8(monthRaw & 0x7f);
 
 
@@ -348,11 +328,9 @@ public:
     {
         _wire.beginTransmission(DS3231_ADDRESS);
         _wire.write(DS3231_REG_TEMP);
+
         _lastError = _wire.endTransmission();
-        if (_lastError != 0)
-        {
-            return RtcTemperature(0);
-        }
+        if (_lastError) return RtcTemperature(0);
 
         // Temperature is represented as a 10-bit code with a resolution
         // of 1/4th °C and is accessable as a signed 16-bit integer at
@@ -369,28 +347,21 @@ public:
         // 256 * (+/- 25+(1/4)) = +/- 6464, or 1940h / E6C0h.
 
         uint8_t bytesRead = _wire.requestFrom(DS3231_ADDRESS, DS3231_REG_TEMP_SIZE);
-        if (DS3231_REG_TEMP_SIZE != bytesRead)
-        {
+        if (bytesRead != DS3231_REG_TEMP_SIZE) {
             _lastError = 4;
             return RtcTemperature(0);
         }
 
-        int8_t  r11h = _wire.read();                  // MS byte, signed temperature
-        return RtcTemperature( r11h, _wire.read() );  // LS byte is r12h
+        int8_t r11h = _wire.read();                   // MS byte, signed temperature
+        return RtcTemperature(r11h, _wire.read());    // LS byte is r12h
     }
 
     void Enable32kHzPin(bool enable)
     {
         uint8_t sreg = getReg(DS3231_REG_STATUS);
 
-        if (enable == true)
-        {
-            sreg |= _BV(DS3231_EN32KHZ);
-        }
-        else
-        {
-            sreg &= ~_BV(DS3231_EN32KHZ);
-        }
+        if (enable) sreg |= _BV(DS3231_EN32KHZ);
+        else        sreg &= ~_BV(DS3231_EN32KHZ);
 
         setReg(DS3231_REG_STATUS, sreg);
     }
@@ -403,28 +374,18 @@ public:
         creg &= ~(DS3231_AIEMASK | _BV(DS3231_BBSQW));
         creg |= _BV(DS3231_INTCN);  // set INTCN to disables clock SQW
 
-        if (pinMode != DS3231SquareWavePin_ModeNone)
-        {
+        if (pinMode != DS3231SquareWavePin_ModeNone) {
             if (pinMode == DS3231SquareWavePin_ModeClock)
-            {
                 creg &= ~_BV(DS3231_INTCN); // clear INTCN to enable clock SQW 
-            }
-            else
-            {
+            else {
                 if (pinMode & DS3231SquareWavePin_ModeAlarmOne)
-                {
                     creg |= _BV(DS3231_A1IE);
-                }
                 if (pinMode & DS3231SquareWavePin_ModeAlarmTwo)
-                {
                     creg |= _BV(DS3231_A2IE);
-                }
             }
 
             if (enableWhileInBatteryBackup)
-            {
                 creg |= _BV(DS3231_BBSQW); // set enable int/sqw while in battery backup flag
-            }
         }
         setReg(DS3231_REG_CONTROL, creg);
     }
@@ -451,9 +412,7 @@ public:
 
         uint8_t rtcDow = alarm.DayOf();
         if (alarm.ControlFlags() == DS3231AlarmOneControl_HoursMinutesSecondsDayOfWeekMatch)
-        {
             rtcDow = RtcDateTime::ConvertDowToRtc(rtcDow);
-        }
 
         _wire.write(Uint8ToBcd(rtcDow) | ((alarm.ControlFlags() & 0x18) << 3));
 
@@ -471,9 +430,7 @@ public:
         // convert our Day of Week to Rtc Day of Week if needed
         uint8_t rtcDow = alarm.DayOf();
         if (alarm.ControlFlags() == DS3231AlarmTwoControl_HoursMinutesDayOfWeekMatch)
-        {
             rtcDow = RtcDateTime::ConvertDowToRtc(rtcDow);
-        }
         
         _wire.write(Uint8ToBcd(rtcDow) | ((alarm.ControlFlags() & 0x0c) << 4));
 
@@ -484,26 +441,24 @@ public:
     {
         _wire.beginTransmission(DS3231_ADDRESS);
         _wire.write(DS3231_REG_ALARMONE);
+
         _lastError = _wire.endTransmission();
-        if (_lastError != 0)
-        {
+        if (_lastError)
             return DS3231AlarmOne(0, 0, 0, 0, DS3231AlarmOneControl_HoursMinutesSecondsDayOfMonthMatch);
-        }
 
         uint8_t bytesRead = _wire.requestFrom(DS3231_ADDRESS, DS3231_REG_ALARMONE_SIZE);
-        if (DS3231_REG_ALARMONE_SIZE != bytesRead)
-        {
+        if (bytesRead != DS3231_REG_ALARMONE_SIZE) {
             _lastError = 4;
             return DS3231AlarmOne(0, 0, 0, 0, DS3231AlarmOneControl_HoursMinutesSecondsDayOfMonthMatch);
         }
 
         uint8_t raw = _wire.read();
         uint8_t flags = (raw & 0x80) >> 7;
-        uint8_t second = BcdToUint8(raw & 0x7F);
+        uint8_t second = BcdToUint8(raw & 0x7f);
 
         raw = _wire.read();
         flags |= (raw & 0x80) >> 6;
-        uint8_t minute = BcdToUint8(raw & 0x7F);
+        uint8_t minute = BcdToUint8(raw & 0x7f);
 
         raw = _wire.read();
         flags |= (raw & 0x80) >> 5;
@@ -514,9 +469,7 @@ public:
         uint8_t dayOf = BcdToUint8(raw & 0x3f);
 
         if (flags == DS3231AlarmOneControl_HoursMinutesSecondsDayOfWeekMatch)
-        {
             dayOf = RtcDateTime::ConvertRtcToDow(dayOf);
-        }
 
         return DS3231AlarmOne(dayOf, hour, minute, second, (DS3231AlarmOneControl)flags);
     }
@@ -525,22 +478,20 @@ public:
     {
         _wire.beginTransmission(DS3231_ADDRESS);
         _wire.write(DS3231_REG_ALARMTWO);
+
         _lastError = _wire.endTransmission();
-        if (_lastError != 0)
-        {
+        if (_lastError)
             return DS3231AlarmTwo(0, 0, 0, DS3231AlarmTwoControl_HoursMinutesDayOfMonthMatch);
-        }
 
         uint8_t bytesRead = _wire.requestFrom(DS3231_ADDRESS, DS3231_REG_ALARMTWO_SIZE);
-        if (DS3231_REG_ALARMTWO_SIZE != bytesRead)
-        {
+        if (bytesRead != DS3231_REG_ALARMTWO_SIZE) {
             _lastError = 4;
             return DS3231AlarmTwo(0, 0, 0, DS3231AlarmTwoControl_HoursMinutesDayOfMonthMatch);
         }
 
         uint8_t raw = _wire.read();
         uint8_t flags = (raw & 0x80) >> 7;
-        uint8_t minute = BcdToUint8(raw & 0x7F);
+        uint8_t minute = BcdToUint8(raw & 0x7f);
 
         raw = _wire.read();
         flags |= (raw & 0x80) >> 6;
@@ -551,9 +502,7 @@ public:
         uint8_t dayOf = BcdToUint8(raw & 0x3f);
 
         if (flags == DS3231AlarmTwoControl_HoursMinutesDayOfWeekMatch)
-        {
             dayOf = RtcDateTime::ConvertRtcToDow(dayOf);
-        }
 
         return DS3231AlarmTwo(dayOf, hour, minute, (DS3231AlarmTwoControl)flags);
     }
@@ -575,11 +524,9 @@ public:
         creg |= _BV(DS3231_CONV); // Write CONV bit
         setReg(DS3231_REG_CONTROL, creg);
 
-        while (block && (creg & _BV(DS3231_CONV)) != 0)
-        {
+        while (block && (creg & _BV(DS3231_CONV)))
             // Block until CONV is 0
             creg = getReg(DS3231_REG_CONTROL);
-        }
     }
 
     int8_t GetAgingOffset()
@@ -600,22 +547,18 @@ private:
     {
         _wire.beginTransmission(DS3231_ADDRESS);
         _wire.write(regAddress);
+
         _lastError = _wire.endTransmission();
-        if (_lastError != 0)
-        {
-            return 0;
-        }
+        if (_lastError) return 0;
 
         // control register
         uint8_t bytesRead = _wire.requestFrom(DS3231_ADDRESS, (uint8_t)1);
-        if (1 != bytesRead)
-        {
+        if (bytesRead != 1) {
             _lastError = 4;
             return 0;
         }
 
-        uint8_t regValue = _wire.read();
-        return regValue;
+        return _wire.read();
     }
 
     void setReg(uint8_t regAddress, uint8_t regValue)
@@ -627,5 +570,3 @@ private:
     }
 
 };
-
-#endif // __RTCDS3231_H__
