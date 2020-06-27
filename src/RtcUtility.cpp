@@ -14,21 +14,8 @@ uint8_t Uint8ToBcd(uint8_t val)
 
 uint8_t BcdToBin24Hour(uint8_t bcdHour)
 {
-    uint8_t hour;
-    if (bcdHour & 0x40)
-    {
-        // 12 hour mode, convert to 24
-        bool isPm = ((bcdHour & 0x20) != 0);
-
-        hour = BcdToUint8(bcdHour & 0x1f);
-        if (isPm)
-        {
-           hour += 12;
-        }
-    }
-    else
-    {
-        hour = BcdToUint8(bcdHour);
-    }
-    return hour;
+    return (bcdHour & 0x40)
+                                        // add 12-hours if PM, 0 if AM
+        ? (BcdToUint8(bcdHour & 0x1f) + (((bcdHour & 0x20) >> 3) * 3))
+        : BcdToUint8(bcdHour);
 }

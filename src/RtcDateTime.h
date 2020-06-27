@@ -1,15 +1,11 @@
-
-
-#ifndef __RTCDATETIME_H__
-#define __RTCDATETIME_H__
+#pragma once
 
 // ESP32 complains if not included
 #if defined(ARDUINO_ARCH_ESP32)
 #include <inttypes.h>
 #endif
 
-enum DayOfWeek
-{
+enum DayOfWeek {
     DayOfWeek_Sunday = 0,
     DayOfWeek_Monday,
     DayOfWeek_Tuesday,
@@ -109,16 +105,16 @@ public:
     uint16_t TotalDays() const;
     
     // add seconds
-    void operator += (uint32_t seconds)
+    void operator+=(uint32_t seconds)
     {
-        RtcDateTime after = RtcDateTime( TotalSeconds() + seconds );
+        RtcDateTime after = RtcDateTime(TotalSeconds() + seconds);
         *this = after;
     }
 
     // remove seconds
-    void operator -= (uint32_t seconds)
+    void operator-=(uint32_t seconds)
     {
-        RtcDateTime before = RtcDateTime( TotalSeconds() - seconds );
+        RtcDateTime before = RtcDateTime(TotalSeconds() - seconds);
         *this = before;
     }
 
@@ -155,17 +151,13 @@ public:
     // RTC Hardware Day of Week is 1-7, 1 = Monday
     static uint8_t ConvertDowToRtc(uint8_t dow)
     {
-        if (dow == 0)
-        {
-            dow = 7;
-        }
-        return dow;
+        return dow ? dow : 7;
     }
 
     // convert Rtc Day of Week to our Day of Week
     static uint8_t ConvertRtcToDow(uint8_t rtcDow)
     {
-        return (rtcDow % 7);
+        return rtcDow % 7;
     }
 
 protected:
@@ -176,7 +168,7 @@ protected:
     uint8_t _minute;
     uint8_t _second;
 
-    template <typename T> void _initWithSecondsFrom2000(T secondsFrom2000)
+    template<typename T> void _initWithSecondsFrom2000(T secondsFrom2000)
     {
         _second = secondsFrom2000 % 60;
         T timeFrom2000 = secondsFrom2000 / 60;
@@ -186,25 +178,19 @@ protected:
         T days = timeFrom2000 / 24;
         T leapDays;
 
-        for (_yearFrom2000 = 0;; ++_yearFrom2000)
-        {
+        for (_yearFrom2000 = 0;;++_yearFrom2000) {
             leapDays = (_yearFrom2000 % 4 == 0) ? 1 : 0;
-            if (days < 365U + leapDays)
-                break;
+            if (days < 365U + leapDays) break;
             days -= 365 + leapDays;
         }
-        for (_month = 1;; ++_month)
-        {
+        for (_month = 1;;++_month) {
             uint8_t daysPerMonth = pgm_read_byte(c_daysInMonth + _month - 1);
             if (leapDays && _month == 2)
-                daysPerMonth++;
-            if (days < daysPerMonth)
-                break;
+                ++daysPerMonth;
+            if (days < daysPerMonth) break;
             days -= daysPerMonth;
         }
         _dayOfMonth = days + 1;
     }
 
 };
-
-#endif // __RTCDATETIME_H__
